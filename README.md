@@ -41,7 +41,7 @@ installation; Flipendo replaces only the engine underneath them.
 **You need your own copy of the game.** Flipendo contains no game data.
 
 Everything below is about Philosopher's Stone unless it says otherwise; Chamber of Secrets has its own
-[status section](#chamber-of-secrets-work-in-progress).
+[status section](#chamber-of-secrets-needs-a-playtest).
 
 ## Why play it this way?
 
@@ -95,19 +95,15 @@ All taken in Flipendo at 1920x1080 from the original game files.
 
 Playtesters are welcome: anything that looks or behaves differently from the original is a useful bug report.
 
-### Chamber of Secrets: work in progress
+### Chamber of Secrets: needs a playtest
 
 Most of the engine work is shared with the first game, so Chamber of Secrets reuses it; what differs is being ported
-now. It is not ready to play yet; the [roadmap](ROADMAP.md) has the full list.
+now. Development is moving quickly, so we don't know exactly how close it is to the original yet: parts we haven't
+played through may already work, and others may not. It needs a full playtest; the [roadmap](ROADMAP.md) has what we
+know about.
 
-| | |
-|---|---|
-| ✅ Works | Starts straight into a new game (tested on Linux), the opening cutscenes up to the Whomping Willow with subtitles (Enter skips them), the in-game menu and options at any resolution |
-| 🟡 Partly | Sound effects and music play but aren't checked against the original yet |
-| ❌ Not yet | Voices, the start menu (New Game / Load Game / Options), saving and loading, playing past the first scenes, the cutscene camera in the opening flyover |
-
-If you try it, build from source (below) and point it at your Chamber of Secrets folder (retail 1.0, the one with
-`system/Game.exe`). Bug reports are welcome, but expect rough edges.
+If you play it, build from source (below) and point it at your Chamber of Secrets folder (retail 1.0, the one with
+`system/Game.exe`). Please report what works and what doesn't, with where you got to in the game.
 
 ## How to play
 
@@ -117,7 +113,7 @@ If you try it, build from source (below) and point it at your Chamber of Secrets
   `Maps/`, `Textures/` and so on. Known versions: UK 1.1, EN retail and a community No-CD,
   Russian (EA Hit-Parade) and its No-CD. If yours isn't
   recognised, the error shows a code (SHA-1); please [report it](CONTRIBUTING.md#other-game-versions).
-- Or **Chamber of Secrets for PC (2002)**, to try the [work in progress](#chamber-of-secrets-work-in-progress).
+- Or **Chamber of Secrets for PC (2002)**, to [playtest it](#chamber-of-secrets-needs-a-playtest).
 - **Windows 10/11**, **Linux** (a distribution from 2024 or later), or a **Mac** with Apple Silicon.
 
 ### Get it running
