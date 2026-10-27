@@ -144,7 +144,7 @@ index bf6912eb..5f4daaa3 100644
  }
 \ No newline at end of file
 diff --git a/SurrealEngine/UE1GameDatabase.h b/SurrealEngine/UE1GameDatabase.h
-index c87149a8..795033b5 100644
+index c87149a8..f2531c37 100644
 --- a/SurrealEngine/UE1GameDatabase.h
 +++ b/SurrealEngine/UE1GameDatabase.h
 @@ -199,11 +199,29 @@ static const std::map<std::string, KnownUE1Games> SHA1Database = {
@@ -160,7 +160,7 @@ index c87149a8..795033b5 100644
 +	// Harry Potter 1 (RU), EA Hit-Parade retail, SafeDisc-wrapped exe
 +	{"5d7ff458f6a9c3f6ff70725ecb3dada3b320998e", KnownUE1Games::HARRYPOTTER1_433},
 +
-+	// Harry Potter 1 (RU), EA Hit-Parade retail, No-CD exe shipped with the rutracker release
++	// Harry Potter 1, No-CD exe shipped with the RU EA Hit-Parade rutracker release and with the EN archive.org image (harry-potter-1_202303, Crack/HP.exe)
 +	{"7d5664c62634596fecf09013aa1aaf902a50cb27", KnownUE1Games::HARRYPOTTER1_433},
 +
 +	// Harry Potter 1 (EU, EN/FR/DE), retail release, reported in issue #11 (SafeDisc or No-CD not known)
