@@ -71,6 +71,8 @@ Legend: [~] partly done / in progress · [ ] not started
       extra final-battle taunts. Cut spells are out (no level content uses them)
 
 ## Releases
-- [ ] Game folder picker in the launcher remembered between runs, so players never touch the command line
-- [ ] Version number in the window title and the log, for bug reports
-- [ ] Linux download (prebuilt) and a Steam Deck build tested with Flipendo
+- [~] Game folder picker: SurrealEngine's launcher has a Game Folders page (Add opens a folder dialog, the list is
+      kept in its settings); check it finds HP1 and HP2 folders in the release zips, then make it the README's way in
+      instead of dragging the folder onto the exe
+- [ ] Version number (the release tag) in the window title and the log, for bug reports
+- [ ] A Steam Deck build tested with Flipendo
