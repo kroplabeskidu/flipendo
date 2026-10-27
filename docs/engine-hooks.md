@@ -55,6 +55,7 @@ Paths are relative to `src/engine/SurrealEngine/` unless they start with `src/en
 | File | Hook |
 |---|---|
 | `src/engine/CMakeLists.txt` | includes `src/flipendo.cmake` (`src/knowwonder/knowwonder.cmake`, `src/hp1/hp1.cmake`) |
+| `Engine.cpp` (OpenWindow, Run) | `IsKnowWonder()`: the window title is "<game> - Flipendo <version>" (`KW::FlipendoVersion`, `src/knowwonder/KWVersion.cpp`); the log's first line is "Flipendo <version>" (any game) |
 | `Engine.cpp` (OpenWindow) | window icon `KW::GameIcons`: the game's own `System/<exe>.ico` from the player's folder (HP1 `hp.ico`, grey background made transparent), else SurrealEngine's |
 | `Package/PackageManager.cpp` | `HP1::RegisterNatives()` after SurrealEngine natives |
 | `Package/PackageManager.cpp` (ScanFolder) | `IsKnowWonder()`: the plain package file wins over a language file next to it (`AllDialog.uax` over `AllDialog.int_uax`, [packages](re/engine/packages.md#language-files-appfindpackagefile-hp1-core-0x10153f40)); also fixes the doubled folder in a language file's path (any game) |

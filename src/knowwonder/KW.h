@@ -38,6 +38,9 @@ class Image;
 
 namespace KW
 {
+	// Flipendo's version, from the release tag or git describe (src/flipendo.cmake): "1.1", "1.1-17-g9c0a8ed", "dev".
+	std::string FlipendoVersion();
+
 	// Engine::OpenWindow: the game's own icon from the player's folder (System/<exe>.ico, src/knowwonder/KWIcon.cpp); empty if missing.
 	std::vector<std::shared_ptr<Image>> GameIcons(const std::string& gameRootFolder, const std::string& exeName);
 

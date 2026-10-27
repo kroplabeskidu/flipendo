@@ -74,5 +74,3 @@ Legend: [~] partly done / in progress · [ ] not started
 - [~] Game folder picker: SurrealEngine's launcher has a Game Folders page (Add opens a folder dialog, the list is
       kept in its settings); check it finds HP1 and HP2 folders in the release zips, then make it the README's way in
       instead of dragging the folder onto the exe
-- [ ] Version number (the release tag) in the window title and the log, for bug reports
-- [ ] A Steam Deck build tested with Flipendo
