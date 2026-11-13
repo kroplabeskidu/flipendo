@@ -110,6 +110,10 @@ one in the story (checked 2026-10-05 over every `.unr` in HP1's `Maps`).
   bytes of their declared size, which SurrealEngine doesn't keep). Classes are looked up in `[Editor.EditorEngine]
   EditPackages`. Tested 2026-10-20 between Entryhall_hub and Grounds_hub: a changed property, a picked-up bean and
   an actor only the file has come back as they should.
+  The header's size and time are the map file's in the `*.unr` Paths folder, as the original's: until 2026-11-14 they
+  came from the loaded level package, which for a level loaded from a save is `SaveN.usa`, so a hub left after a load
+  got a header for the save and its cache was thrown away on the next visit (found in a player's `Adv6Goyle_pa.usa`,
+  issue #23). Checked headless: `LoadGame 7` in Adv6Goyle, then `SavePActors` writes 5196990 bytes, the map's size.
 - Also needed for it: actors spawned at runtime had names a map actor already used (SurrealEngine numbered them from
   0 per class: a spawned `Jellybean0` next to the map's), which made two persistent actors share a name. Spawned
   names now skip names in use (KnowWonder games).
