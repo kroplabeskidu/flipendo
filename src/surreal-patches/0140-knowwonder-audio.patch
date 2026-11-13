@@ -1,7 +1,7 @@
 flipendo: KnowWonder sound and music
 
 diff --git a/SurrealEngine/Packages/Engine/Subsystems/USurrealAudioDevice.cpp b/SurrealEngine/Packages/Engine/Subsystems/USurrealAudioDevice.cpp
-index f6d52c05..3f464992 100644
+index f6d52c05..4b74c20e 100644
 --- a/SurrealEngine/Packages/Engine/Subsystems/USurrealAudioDevice.cpp
 +++ b/SurrealEngine/Packages/Engine/Subsystems/USurrealAudioDevice.cpp
 @@ -9,12 +9,31 @@
@@ -155,7 +155,7 @@ index f6d52c05..3f464992 100644
  	if (!engine->LaunchInfo.IsDeusEx())
  		return;
  	if (!Playing.Actor)
-@@ -324,35 +371,74 @@ void USurrealAudioDevice::UpdateSounds()
+@@ -324,35 +371,75 @@ void USurrealAudioDevice::UpdateSounds()
  	if (!m_Viewport || !m_Viewport->Actor())
  		return;
  
@@ -187,8 +187,9 @@ index f6d52c05..3f464992 100644
  			float globalVolume = SoundVolume / 255.0f * 0.5f;
  			if (engine->LaunchInfo.IsDeusEx() && GetSoundSlot(Playing.Id) == SLOT_Talk)
  				globalVolume = SpeechVolume / 255.0f * 0.5f;
-+			if (hp2 && HP2::SoundsMuted())
-+				globalVolume = 0.0f;
++			// HP2 has its SoundVolume in the sound's volume already (PlaySound, HP2::UpdateSound), without halving
++			if (hp2)
++				globalVolume = HP2::SoundsMuted() ? 0.0f : 1.0f;
  
 +			// HP2's StopSound fade-out (UALAudioSubsystem::Update): linear over FadeOutTime, a step of at most 1 s, then stopped
 +			float volume = Playing.Volume;
@@ -236,7 +237,7 @@ index f6d52c05..3f464992 100644
  				if (!m_Device->IsPlaying((int)i))
  				{
  					ClearLipSync(Playing);
-@@ -425,12 +511,29 @@ bool USurrealAudioDevice::IsSameSoundId(int id1, int id2)
+@@ -425,12 +512,30 @@ bool USurrealAudioDevice::IsSameSoundId(int id1, int id2)
  	return (id1 & ~1) == (id2 & ~1);
  }
  
@@ -255,8 +256,9 @@ index f6d52c05..3f464992 100644
 -	if (GetSoundSlot(Id) == SLOT_Talk && engine->LaunchInfo.IsDeusEx())
 +	if (engine->LaunchInfo.IsHarryPotter2())
 +	{
-+		// ALAudio: the volume from 0.01 to full, the pitch from 0.1 to 2
-+		Volume = std::clamp(Volume, 0.01f, 1.0f);
++		// ALAudio: the volume times its SoundVolume (the ini's 0.9), from 0.01 to full, the pitch from 0.1 to 2.
++		// The product is the sound's volume for its gain and its priority; UpdateSounds adds no global factor.
++		Volume = std::clamp(Volume * SoundVolume / 255.0f, 0.01f, 1.0f);
 +		Pitch = std::clamp(Pitch, 0.1f, 2.0f);
 +	}
 +	else if (engine->LaunchInfo.IsKnowWonder())
@@ -269,7 +271,7 @@ index f6d52c05..3f464992 100644
  	{
  		// Should this still be directional?
  		Volume *= 2.0f;
-@@ -451,12 +554,26 @@ bool USurrealAudioDevice::PlaySound(UActor* Actor, int Id, USound* Sound, vec3 L
+@@ -451,12 +556,26 @@ bool USurrealAudioDevice::PlaySound(UActor* Actor, int Id, USound* Sound, vec3 L
  	if (GetSoundSlot(Id) == SLOT_None)
  		Id = CreateSoundId(Actor, SLOT_None, false);
  
@@ -299,7 +301,7 @@ index f6d52c05..3f464992 100644
  	{
  		PlayingSound& Playing = PlayingSounds[i];
  		if (IsSameSoundId(Playing.Id, Id))
-@@ -486,6 +603,9 @@ bool USurrealAudioDevice::PlaySound(UActor* Actor, int Id, USound* Sound, vec3 L
+@@ -486,6 +605,9 @@ bool USurrealAudioDevice::PlaySound(UActor* Actor, int Id, USound* Sound, vec3 L
  	StopSound(Index);
  	PlayingSounds[Index] = PlayingSound(Actor, Id, Sound, Location, Volume, Radius, Pitch, Priority);
  	PlayingSounds[Index].StartTime = engine->LevelInfo->TimeSeconds();
@@ -309,7 +311,7 @@ index f6d52c05..3f464992 100644
  
  	return true;
  }
-@@ -522,6 +642,63 @@ void USurrealAudioDevice::StopSound(UActor* Actor, int Id)
+@@ -522,6 +644,63 @@ void USurrealAudioDevice::StopSound(UActor* Actor, int Id)
  	}
  }
  
@@ -373,7 +375,7 @@ index f6d52c05..3f464992 100644
  void USurrealAudioDevice::StopSound(size_t index)
  {
  	PlayingSound& Playing = PlayingSounds[index];
-@@ -541,6 +718,11 @@ void USurrealAudioDevice::StopSounds()
+@@ -541,6 +720,11 @@ void USurrealAudioDevice::StopSounds()
  	for (size_t i = 0; i < PlayingSounds.size(); i++)
  		StopSound(i);
  
