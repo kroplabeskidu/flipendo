@@ -8,9 +8,10 @@ Legend: [~] partly done / in progress · [ ] not started
 
 ## HP2: Chamber of Secrets
 - [~] HP2 (UE1 build 433), on the same engine as HP1 (groundwork: [docs/one-engine.md](docs/one-engine.md)).
-  Status (2026-11-13): players are now playtesting it (issue #16, releases 1.3 and 1.4) and reporting bugs; four were
+  Status (2026-11-13): players are now playtesting it (issue #16, releases 1.3 to 1.5) and reporting bugs; four were
   fixed on 2026-11-11 (vendor trading crash #19, large fire crabs' fireballs crash #21, flipped crab on a lift #22,
-  invisible wand #25). Nobody has played it through to the end yet, so how close it is to the original isn't known.
+  invisible wand #25), and on 2026-11-13 the first challenge (Ch1Rictusempra, #26, #16: fire crabs and the crab bucket;
+  in 1.5). Nobody has played it through to the end yet, so how close it is to the original isn't known.
   Known to work: Game.exe's front end (splashes, New Game, Load Game, Options), the intro and its
   cutscenes with subtitles (Enter skips them), the in-game book and options at any resolution, saving and loading,
   hub persistence; contributors have played on into later levels (Peeves' Skurge fight, Aragog's web). The HP2 sound
@@ -78,8 +79,6 @@ Legend: [~] partly done / in progress · [ ] not started
       extra final-battle taunts. Cut spells are out (no level content uses them)
 
 ## Releases
-- [~] Flipendo 1.5: draft release (tag v1.5, 2026-11-12), with the HP2 fixes made since 1.4; publish it.
-      1.4 (2026-11-11) is the latest public one
 - [~] Game folder picker: SurrealEngine's launcher has a Game Folders page (Add opens a folder dialog, the list is
       kept in its settings); check it finds HP1 and HP2 folders in the release zips, then make it the README's way in
       instead of dragging the folder onto the exe
