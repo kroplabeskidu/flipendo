@@ -931,6 +931,71 @@ index 78b0a27d..c96a6e5b 100644
  		return obj;
  	}
  	else
+diff --git a/SurrealEngine/Package/PackageStream.cpp b/SurrealEngine/Package/PackageStream.cpp
+index b8bfdb51..39e8a6cc 100644
+--- a/SurrealEngine/Package/PackageStream.cpp
++++ b/SurrealEngine/Package/PackageStream.cpp
+@@ -91,20 +91,20 @@ int32_t PackageStream::ReadIndex()
+ 	uint8_t value = ReadInt8();
+ 	bool signbit = value & (1 << 7);
+ 	bool nextbyte = value & (1 << 6);
+-	int32_t index = value & 0x3f;
++	uint32_t index = value & 0x3f;
+ 	if (nextbyte)
+ 	{
+ 		int shift = 6;
+ 		do
+ 		{
+ 			value = ReadInt8();
+-			index |= static_cast<int32_t>(value & 0x7f) << shift;
++			index |= static_cast<uint32_t>(value & 0x7f) << shift;
+ 			shift += 7;
+ 		} while ((value & (1 << 7)) && shift < 32);
+ 	}
+ 	if (signbit)
+-		index = -index;
+-	return index;
++		index = 0u - index;
++	return (int32_t)index;
+ }
+ 
+ std::string PackageStream::ReadString()
+@@ -210,23 +210,27 @@ void PackageStreamWriter::WriteUInt64(uint64_t v)
+ 
+ void PackageStreamWriter::WriteIndex(int32_t v)
+ {
++	// The magnitude is unsigned: -INT_MIN doesn't fit in an int32_t, and a negative value shifted right never reaches
++	// 0, which wrote 0xFF bytes forever (HP2's Adv12Chamber BSP has a vertex index of INT_MIN). ReadIndex reads the
++	// five bytes written here back as INT_MIN.
+ 	uint8_t byte = 0;
++	uint32_t magnitude = (uint32_t)v;
+ 	if (v < 0)
+ 	{
+ 		byte |= (1 << 7);
+-		v = -v;
++		magnitude = 0u - magnitude;
+ 	}
+-	byte |= (uint8_t)(v & 0x3f);
+-	v >>= 6;
+-	if (v != 0)
++	byte |= (uint8_t)(magnitude & 0x3f);
++	magnitude >>= 6;
++	if (magnitude != 0)
+ 		byte |= (1 << 6);
+ 	WriteUInt8(byte);
+ 
+-	while (v != 0)
++	while (magnitude != 0)
+ 	{
+-		byte = v & 0x7f;
+-		v >>= 7;
+-		if (v != 0)
++		byte = magnitude & 0x7f;
++		magnitude >>= 7;
++		if (magnitude != 0)
+ 			byte |= (1 << 7);
+ 		WriteUInt8(byte);
+ 	}
 diff --git a/SurrealEngine/Packages/Core/Properties/UStrProperty.cpp b/SurrealEngine/Packages/Core/Properties/UStrProperty.cpp
 index ce5b70fc..efd65370 100644
 --- a/SurrealEngine/Packages/Core/Properties/UStrProperty.cpp

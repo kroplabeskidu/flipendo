@@ -26,6 +26,7 @@ SurrealEngine/VM/**
 SurrealEngine/Packages/Core/**
 SurrealEngine/Package/IniFile.*
 SurrealEngine/Package/Package.*
+SurrealEngine/Package/PackageStream.*
 SurrealEngine/Package/ObjectStream.h
 SurrealEngine/Native/NObject.cpp
 SurrealEngine/UI/**
