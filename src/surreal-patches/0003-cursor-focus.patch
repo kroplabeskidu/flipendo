@@ -1,4 +1,4 @@
-flipendo: only recenter the mouse cursor, and only act on raw mouse/keyboard input, while the game window is the active (foreground) window; window icons the right way up; macOS: a window started in fullscreen goes fullscreen reliably, and held mouse buttons count as held keys; Wayland keeps the fractional part of raw mouse motion
+flipendo: only recenter the mouse cursor, and only act on raw mouse/keyboard input, while the game window is the active (foreground) window; window icons the right way up; macOS: a window started in fullscreen goes fullscreen reliably, and held mouse buttons count as held keys; Wayland keeps the fractional part of raw mouse motion; X11: a window started in fullscreen goes fullscreen (the window manager is asked before the window is mapped, and with the EWMH client message once it is)
 
 diff --git a/SurrealWidgets/src/window/cocoa/cocoa_display_window.mm b/SurrealWidgets/src/window/cocoa/cocoa_display_window.mm
 index 5f7ee013..d4666fdd 100644
@@ -146,3 +146,48 @@ index 03451a7d..b8ff6974 100644
  		{
  			RECT box = {};
  			GetClientRect(WindowHandle.hwnd, &box);
+diff --git a/SurrealWidgets/src/window/x11/x11_display_window.cpp b/SurrealWidgets/src/window/x11/x11_display_window.cpp
+index a29235ed..d6de3012 100644
+--- a/SurrealWidgets/src/window/x11/x11_display_window.cpp
++++ b/SurrealWidgets/src/window/x11/x11_display_window.cpp
+@@ -271,15 +271,34 @@ void X11DisplayWindow::Show()
+ 
+ void X11DisplayWindow::ShowFullscreen()
+ {
+-	Show();
+-
+ 	auto connection = GetX11Connection();
+-	if (connection->GetAtom("_NET_WM_STATE") != None && connection->GetAtom("_NET_WM_STATE_FULLSCREEN") != None)
++	Atom wmState = connection->GetAtom("_NET_WM_STATE");
++	Atom fullscreenState = connection->GetAtom("_NET_WM_STATE_FULLSCREEN");
++	if (wmState == None || fullscreenState == None)
+ 	{
+-		Atom state = connection->GetAtom("_NET_WM_STATE_FULLSCREEN");
+-		XChangeProperty(display, window, connection->GetAtom("_NET_WM_STATE"), XA_ATOM, 32, PropModeReplace, (unsigned char *)&state, 1);
+-		isFullscreen = true;
++		Show();
++		return;
+ 	}
++
++	// A window manager reads _NET_WM_STATE only when the window is mapped, so set it first.
++	if (!isMapped)
++		XChangeProperty(display, window, wmState, XA_ATOM, 32, PropModeReplace, (unsigned char *)&fullscreenState, 1);
++
++	Show();
++
++	// For a window that is already mapped, EWMH requires a client message to the root window instead.
++	XEvent event = {};
++	event.xclient.type = ClientMessage;
++	event.xclient.window = window;
++	event.xclient.message_type = wmState;
++	event.xclient.format = 32;
++	event.xclient.data.l[0] = 1; // _NET_WM_STATE_ADD
++	event.xclient.data.l[1] = fullscreenState;
++	event.xclient.data.l[2] = 0;
++	event.xclient.data.l[3] = 1; // request from a normal application
++	XSendEvent(display, RootWindow(display, screen), False, SubstructureRedirectMask | SubstructureNotifyMask, &event);
++	XFlush(display);
++	isFullscreen = true;
+ }
+ 
+ bool X11DisplayWindow::IsWindowFullscreen()
